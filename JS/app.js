@@ -5,18 +5,21 @@ let leftIndex;
 let middletIndex;
 let rightIndex;
 let attempts = 1;
-
+let arrOfnames=[];
+let arrOfShown=[];
+let arrOfVotes=[];
 let productsArr=[];
+
 function Products (prodName,path){
   this.prodName=prodName;
   this.path=path;
   this.counter=0;
   this.numbers=0;
   productsArr.push(this);
+  arrOfnames.push(this.prodName);
 //   console.log(this);
 }
 
-console.log(productsArr);
 new Products('bag','../Images/bag.jpg' );
 new Products('banana','../Images/banana.jpg' );
 new Products('bathroom','../Images/bathroom.jpg' );
@@ -78,7 +81,7 @@ function counts(event){
   else{
     productsArr[rightIndex].numbers++;
   }
-  if (attempts <25){
+  if (attempts <5){
     renderThreeImages();
     attempts++;
   }
@@ -98,6 +101,8 @@ function results(){
   let ul = document.createElement('ul');
   view.appendChild(ul);
   for ( let i=0 ; i<productsArr.length ; i++){
+    arrOfShown.push(productsArr[i].counter)
+    arrOfVotes.push(productsArr[i].numbers)
     let li = document.createElement('li');
     ul.appendChild(li);
     li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
@@ -108,3 +113,30 @@ function results(){
 
 renderThreeImages();
 counts();
+
+function barChart(){
+  let ctx = document.getElementById('myChart');
+  let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: arrOfnames,
+      datasets: [{
+        label: 'Number Of votes',
+        data: arrOfVotes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+        ],
+        borderWidth: 1
+      },{
+        label:'Number of shown',
+        data: arrOfShown,
+        backgroundColor:[
+          'rgb(192,192,192)'
+        ],
+        borderWidth: 1
+      }]
+    }
+  });
+}
+
+
