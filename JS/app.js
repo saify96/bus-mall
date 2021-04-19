@@ -47,7 +47,7 @@ function renderThreeImages(){
   leftIndex =genrateRandomIndex();
   middletIndex =genrateRandomIndex();
   rightIndex =genrateRandomIndex();
-  while (leftIndex === middletIndex || leftIndex === rightIndex || middletIndex === rightIndex || index.includes(leftIndex) || index.includes(rightIndex) || index.includes(leftIndex)){
+  while (leftIndex === middletIndex || leftIndex === rightIndex || middletIndex === rightIndex || index.includes(leftIndex) || index.includes(rightIndex) || index.includes(middletIndex)){
     leftIndex =genrateRandomIndex();
     middletIndex =genrateRandomIndex();
     rightIndex =genrateRandomIndex();
@@ -93,7 +93,7 @@ function counts(event){
   else {
     prompt('press on one of the images');
   }
-  if (attempts <5){
+  if (attempts <25){
     renderThreeImages();
     attempts++;
   }
@@ -117,9 +117,9 @@ function results(){
   for ( let i=0 ; i<productsArr.length ; i++){
     arrOfShown.push(productsArr[i].counter);
     arrOfVotes.push(productsArr[i].numbers);
-    let li = document.createElement('li');
-    ul.appendChild(li);
-    li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
+    // let li = document.createElement('li');
+    // ul.appendChild(li);
+    // li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
   }
   button.removeEventListener('click', results );
   barChart();
