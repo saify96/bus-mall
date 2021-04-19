@@ -5,18 +5,21 @@ let leftIndex;
 let middletIndex;
 let rightIndex;
 let attempts = 1;
-
+let arrOfnames=[];
+let arrOfShown=[];
+let arrOfVotes=[];
 let productsArr=[];
+
 function Products (prodName,path){
   this.prodName=prodName;
   this.path=path;
   this.counter=0;
   this.numbers=0;
   productsArr.push(this);
+  arrOfnames.push(this.prodName);
 //   console.log(this);
 }
 
-console.log(productsArr);
 new Products('bag','../Images/bag.jpg' );
 new Products('banana','../Images/banana.jpg' );
 new Products('bathroom','../Images/bathroom.jpg' );
@@ -39,19 +42,26 @@ new Products('wine-glass','../Images/wine-glass.jpg' );
 function genrateRandomIndex(){
   return Math.floor(Math.random() * productsArr.length);
 }
-
+let index =[];
 function renderThreeImages(){
   leftIndex =genrateRandomIndex();
   middletIndex =genrateRandomIndex();
   rightIndex =genrateRandomIndex();
-
-  while (leftIndex === middletIndex ){
+  while (leftIndex === middletIndex || leftIndex === rightIndex || middletIndex === rightIndex || index.includes(leftIndex) || index.includes(rightIndex) || index.includes(leftIndex)){
+    leftIndex =genrateRandomIndex();
     middletIndex =genrateRandomIndex();
-  }
-  while (leftIndex === rightIndex || middletIndex === rightIndex ){
     rightIndex =genrateRandomIndex();
   }
+  index =[leftIndex,middletIndex,rightIndex];
 
+  // for ( let i =0 ; i<index.length;i++){
+  //   while ( leftIndex === index[i] || middletIndex === index[i] || rightIndex === index[i]){
+  //     leftIndex =genrateRandomIndex();
+  //     middletIndex =genrateRandomIndex();
+  //     rightIndex =genrateRandomIndex();
+  //   }
+  // }
+  console.log(index);
   productsArr[leftIndex].counter++;
   productsArr[middletIndex].counter++;
   productsArr[rightIndex].counter++;
@@ -62,9 +72,11 @@ function renderThreeImages(){
 }
 
 
-leftImageElement.addEventListener('click', counts );
-middleImageElement.addEventListener('click' , counts );
-rightImageElement.addEventListener('click' , counts);
+let imgs = document.getElementById('images');
+imgs.addEventListener('click', counts );
+// leftImageElement.addEventListener('click', counts );
+// middleImageElement.addEventListener('click' , counts );
+// rightImageElement.addEventListener('click' , counts);
 
 
 let button;
@@ -75,20 +87,25 @@ function counts(event){
   else if (event.target.id === 'middle-image' ){
     productsArr[middletIndex].numbers++;
   }
-  else{
+  else if(event.target.id === 'right-image' ){
     productsArr[rightIndex].numbers++;
   }
-  if (attempts <25){
+  else {
+    prompt('press on one of the images');
+  }
+  if (attempts <5){
     renderThreeImages();
     attempts++;
   }
   else {
+
     leftImageElement.removeEventListener('click', counts );
     middleImageElement.removeEventListener('click' , counts );
     rightImageElement.removeEventListener('click' , counts);
     button = document.getElementById('results');
     button.addEventListener('click', results );
-    console.log(productsArr);
+    // console.log(productsArr);
+
   }
 
 }
@@ -98,13 +115,41 @@ function results(){
   let ul = document.createElement('ul');
   view.appendChild(ul);
   for ( let i=0 ; i<productsArr.length ; i++){
+    arrOfShown.push(productsArr[i].counter);
+    arrOfVotes.push(productsArr[i].numbers);
     let li = document.createElement('li');
     ul.appendChild(li);
     li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
   }
   button.removeEventListener('click', results );
+  barChart();
+}
 
+function barChart(){
+  let ctx = document.getElementById('myChart');
+  let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: arrOfnames,
+      datasets: [{
+        label: 'Number Of votes',
+        data: arrOfVotes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+        ],
+        borderWidth: 1
+      },{
+        label:'Number of shown',
+        data: arrOfShown,
+        backgroundColor:[
+          'rgb(192,192,192)'
+        ],
+        borderWidth: 1
+      }]
+    }
+  });
 }
 
 renderThreeImages();
 counts();
+
