@@ -9,7 +9,6 @@ let arrOfnames=[];
 let arrOfShown=[];
 let arrOfVotes=[];
 let productsArr=[];
-Products.array = [];
 
 function Products (prodName,path){
   this.prodName=prodName;
@@ -18,7 +17,6 @@ function Products (prodName,path){
   this.numbers=0;
   productsArr.push(this);
   arrOfnames.push(this.prodName);
-  Products.array.push(this);
 //   console.log(this);
 }
 
@@ -74,13 +72,11 @@ function renderThreeImages(){
   rightImageElement.src = productsArr[rightIndex].path ;
 }
 
-
 let imgs = document.getElementById('images');
 imgs.addEventListener('click',counts);
 // leftImageElement.addEventListener('click', counts );
 // middleImageElement.addEventListener('click' , counts );
 // rightImageElement.addEventListener('click' , counts);
-
 
 let button;
 function counts(event){
@@ -121,12 +117,12 @@ function results(){
   for ( let i=0 ; i<productsArr.length ; i++){
     arrOfShown.push(productsArr[i].counter);
     arrOfVotes.push(productsArr[i].numbers);
-    saveToLocalStorage ();
     let li = document.createElement('li');
     ul.appendChild(li);
     li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
   }
-  button.removeEventListener('click', results );
+  saveToLocalStorage();
+  // button.removeEventListener('click', results );
   barChart();
 }
 
@@ -154,12 +150,11 @@ function barChart(){
     }
   });
 }
-
 renderThreeImages();
 
 
 function saveToLocalStorage (){
-  let storageArr = JSON.stringify(Products.array);
+  let storageArr = JSON.stringify(productsArr);
   localStorage.setItem('productsData' , storageArr);
 }
 
@@ -170,7 +165,9 @@ function gettingFromLocal (){
   console.log(data);
 
   if(votes !== null){
-  Products.array= votes;
-  }
+    productsArr= votes;
 }
-gettingFromLocal ();
+
+}
+
+gettingFromLocal();
