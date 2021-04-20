@@ -39,6 +39,7 @@ new Products('usb','../Images/usb.gif' );
 new Products('water-can','../Images/water-can.jpg' );
 new Products('wine-glass','../Images/wine-glass.jpg' );
 
+
 function genrateRandomIndex(){
   return Math.floor(Math.random() * productsArr.length);
 }
@@ -61,7 +62,7 @@ function renderThreeImages(){
   //     rightIndex =genrateRandomIndex();
   //   }
   // }
-  console.log(index);
+  // console.log(index);
   productsArr[leftIndex].counter++;
   productsArr[middletIndex].counter++;
   productsArr[rightIndex].counter++;
@@ -71,16 +72,15 @@ function renderThreeImages(){
   rightImageElement.src = productsArr[rightIndex].path ;
 }
 
-
 let imgs = document.getElementById('images');
-imgs.addEventListener('click', counts );
+imgs.addEventListener('click',counts);
 // leftImageElement.addEventListener('click', counts );
 // middleImageElement.addEventListener('click' , counts );
 // rightImageElement.addEventListener('click' , counts);
 
-
 let button;
 function counts(event){
+  console.log(event);
   if (event.target.id === 'left-image' ){
     productsArr[leftIndex].numbers++;
   }
@@ -93,12 +93,12 @@ function counts(event){
   else {
     prompt('press on one of the images');
   }
-  if (attempts <25){
+
+  if (attempts <5){
     renderThreeImages();
     attempts++;
   }
   else {
-
     leftImageElement.removeEventListener('click', counts );
     middleImageElement.removeEventListener('click' , counts );
     rightImageElement.removeEventListener('click' , counts);
@@ -117,11 +117,12 @@ function results(){
   for ( let i=0 ; i<productsArr.length ; i++){
     arrOfShown.push(productsArr[i].counter);
     arrOfVotes.push(productsArr[i].numbers);
-    // let li = document.createElement('li');
-    // ul.appendChild(li);
-    // li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
+    let li = document.createElement('li');
+    ul.appendChild(li);
+    li.textContent= `${productsArr[i].prodName} had ${productsArr[i].numbers} votes, and was seen ${productsArr[i].counter} times.` ;
   }
-  button.removeEventListener('click', results );
+  saveToLocalStorage();
+  // button.removeEventListener('click', results );
   barChart();
 }
 
@@ -149,7 +150,24 @@ function barChart(){
     }
   });
 }
-
 renderThreeImages();
-counts();
 
+
+function saveToLocalStorage (){
+  let storageArr = JSON.stringify(productsArr);
+  localStorage.setItem('productsData' , storageArr);
+}
+
+
+function gettingFromLocal (){
+  let data = localStorage.getItem('productsData');
+  let votes = JSON.parse(data);
+  console.log(data);
+
+  if(votes !== null){
+    productsArr= votes;
+}
+
+}
+
+gettingFromLocal();
